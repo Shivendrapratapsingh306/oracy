@@ -1,6 +1,6 @@
 # 🎙️ Oracy
 
-🌐 **Live Demo:** [https://oracy-git-main-treat1.vercel.app/](https://oracy-git-main-treat1.vercel.app/)
+🌐 **Live Demo:** [https://oracy-two.vercel.app/](https://oracy-two.vercel.app/)
 
 <h3 align="center">AI-Powered Multimodal Interview Preparation</h3>
 
@@ -25,6 +25,8 @@ By combining natural language processing, speech analysis, and computer vision, 
 
 ## 🚀 Features
 
+- 🌐 **Multilingual Support** — Complete UI and interview practice support across English, Hindi (हिन्दी), and Telugu (తెలుగు) with language-aware speech & filler analysis.
+- 🌓 **Dark & Light Themes** — Modern theme toggle with persistent user preference and system-level dark mode detection.
 - 📄 **Resume Analysis** — Extract skills, projects, and experience from candidate resumes.
 - 🎯 **Personalized Questions** — Generate role-specific interview questions based on candidate profiles.
 - 🔄 **Adaptive Interviews** — Ask relevant follow-up questions based on previous responses.
