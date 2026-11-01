@@ -1,0 +1,74 @@
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# --- Node / Next.js ---
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# --- IDE / OS ---
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
+# --- Generated media and uploads (never commit user data) ---
+storage/
+uploads/
+*.wav
+*.mp3
+*.m4a
+*.mp4
+*.webm
+*.mov
+*.pdf
+!docs/**/*.pdf
+
+# --- Datasets and model weights ---
+data/
+datasets/
+models_cache/
+*.pt
+*.pth
+*.onnx
+*.bin
+*.safetensors
+*.pkl
+*.joblib
+.cache/
+huggingface/
+
+# --- Docker / local ---
+docker-compose.override.yml
+pgdata/
+
+*.db
+*.sqlite3
+.vercel/
+
