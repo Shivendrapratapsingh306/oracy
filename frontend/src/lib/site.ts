@@ -6,7 +6,7 @@ export const siteConfig = {
     preview: "https://www.lightxeditor.com/blog/wp-content/uploads/2026/06/051276882b5a4aaa8fe64a3c40aeb9e7_1024x680.webp?x46858",
     cta: null,
   },
-  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1",
+  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "/api/v1",
 } as const;
 
 export const navLinks = [

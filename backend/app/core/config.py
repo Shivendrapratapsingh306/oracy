@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     mongodb_database: str = "oracy"
     auth_secret: str = "development-only-change-this-secret-before-deploying-please"
     access_token_minutes: int = 720
-    cors_allowed_origins: str = "http://localhost:3000"
+    cors_allowed_origins: str = "http://localhost:3000,http://127.0.0.1:3000,https://oracy-two.vercel.app"
 
     # LLM Settings (optional; template fallback used when not configured)
     llm_provider: str = ""  # "groq", "openai", "gemini", or "openai_compatible"
