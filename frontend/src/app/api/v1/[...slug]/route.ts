@@ -2,6 +2,38 @@ import { NextResponse } from "next/server";
 
 const BACKEND_URL = process.env.BACKEND_API_URL || process.env.INTERNAL_BACKEND_URL || "http://127.0.0.1:8000/api/v1";
 
+interface StoredUser {
+  id: string;
+  full_name: string;
+  email: string;
+  role: "admin" | "student";
+  created_at: string;
+}
+
+// User store initialized ONLY with the authentic records: Platform Administrator and Tom
+const userStore = new Map<string, StoredUser>([
+  [
+    "admin@oracy.ai",
+    {
+      id: "f15871ad-59b7-415c-84d0-43eb22cf3ea3",
+      full_name: "Platform Administrator",
+      email: "admin@oracy.ai",
+      role: "admin",
+      created_at: "2026-11-01T19:08:42",
+    },
+  ],
+  [
+    "tom@gmail.com",
+    {
+      id: "a3cbda01-3dad-40a4-a714-f6efa031966c",
+      full_name: "tom",
+      email: "tom@gmail.com",
+      role: "student",
+      created_at: "2026-11-01T18:57:30",
+    },
+  ],
+]);
+
 // In-memory demo interview sessions for cloud deployment fallback
 const sessionStore = new Map<string, any>();
 
@@ -48,59 +80,43 @@ export async function GET(req: Request, context: { params: Promise<{ slug: strin
 
   // 2. Admin overview
   if (path === "auth/admin/overview") {
+    const allUsers = Array.from(userStore.values());
+    const studentCount = allUsers.filter((u) => u.role === "student").length;
+    const adminCount = allUsers.filter((u) => u.role === "admin").length;
+    const sessions = Array.from(sessionStore.values());
+    const completedCount = sessions.filter((s) => s.status === "completed").length;
+
     return NextResponse.json({
-      user_count: 48,
-      student_count: 46,
-      admin_count: 2,
-      interview_count: 132,
-      completed_interview_count: 118,
-      recent_users: [
-        {
-          id: "admin-1",
-          full_name: "Platform Administrator",
-          email: "admin@oracy.ai",
-          role: "admin",
-          created_at: "2026-11-01T19:08:42",
-        },
-        {
-          id: "std-1",
-          full_name: "Aarav Sharma",
-          email: "aarav.sharma@example.com",
-          role: "student",
-          created_at: "2026-11-01T20:15:10",
-        },
-        {
-          id: "std-2",
-          full_name: "Priya Reddy",
-          email: "priya.reddy@example.com",
-          role: "student",
-          created_at: "2026-11-01T21:44:00",
-        },
-        {
-          id: "std-3",
-          full_name: "Rohan Verma",
-          email: "rohan.v@example.com",
-          role: "student",
-          created_at: "2026-11-01T22:10:30",
-        },
-      ],
+      user_count: allUsers.length,
+      student_count: studentCount,
+      admin_count: adminCount,
+      interview_count: sessions.length,
+      completed_interview_count: completedCount,
+      recent_users: allUsers,
     });
   }
 
   // 3. User profile
   if (path === "auth/me") {
-    return NextResponse.json({
-      id: "std-1",
-      full_name: "Demo Candidate",
-      email: "candidate@oracy.ai",
+    const tomUser = userStore.get("tom@gmail.com") || {
+      id: "a3cbda01-3dad-40a4-a714-f6efa031966c",
+      full_name: "tom",
+      email: "tom@gmail.com",
       role: "student",
-      created_at: "2026-11-01T10:00:00",
+      created_at: "2026-11-01T18:57:30",
+    };
+    return NextResponse.json({
+      id: tomUser.id,
+      full_name: tomUser.full_name,
+      email: tomUser.email,
+      role: tomUser.role,
+      created_at: tomUser.created_at,
       profile_data: {
-        college: "Indian Institute of Technology",
-        degree: "B.Tech Computer Science",
+        college: "College / University",
+        degree: "Computer Science",
         grad_year: "2025",
         target_role: "Software Engineer",
-        career_goals: "Excel in behavioral and technical interviews",
+        career_goals: "Prepare for upcoming technical and behavioral interviews",
       },
     });
   }
@@ -321,17 +337,23 @@ export async function POST(req: Request, context: { params: Promise<{ slug: stri
     const password = body.password || "";
 
     if (email && password) {
+      let existing = userStore.get(email);
+      if (!existing) {
+        existing = {
+          id: "std-" + Date.now(),
+          full_name: email.split("@")[0].replace(/[._-]/g, " ") || "Student Candidate",
+          email: email,
+          role: "student",
+          created_at: new Date().toISOString(),
+        };
+        userStore.set(email, existing);
+      }
+
       return NextResponse.json({
         access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.oracy-student-token-demo",
         token_type: "bearer",
         expires_in: 43200,
-        user: {
-          id: "std-demo-1",
-          full_name: email.split("@")[0].replace(/[._-]/g, " ") || "Student Candidate",
-          email: email,
-          role: "student",
-          created_at: "2026-11-01T10:00:00",
-        },
+        user: existing,
       });
     }
 
@@ -341,20 +363,24 @@ export async function POST(req: Request, context: { params: Promise<{ slug: stri
   // 3. Student register
   if (path === "auth/register") {
     const email = (body.email || "").trim().toLowerCase();
-    const fullName = (body.full_name || "").trim() || "Student Candidate";
+    const fullName = (body.full_name || "").trim() || email.split("@")[0] || "Student Candidate";
+    const existing = userStore.get(email);
+    const userId = existing ? existing.id : "std-" + Date.now();
+    const newUser: StoredUser = {
+      id: userId,
+      full_name: fullName,
+      email,
+      role: "student",
+      created_at: new Date().toISOString(),
+    };
+    userStore.set(email, newUser);
 
     return NextResponse.json(
       {
         access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.oracy-student-token-demo",
         token_type: "bearer",
         expires_in: 43200,
-        user: {
-          id: "std-demo-" + Date.now(),
-          full_name: fullName,
-          email: email,
-          role: "student",
-          created_at: new Date().toISOString(),
-        },
+        user: newUser,
       },
       { status: 201 }
     );
