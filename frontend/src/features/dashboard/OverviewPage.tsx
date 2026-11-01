@@ -11,7 +11,7 @@ import { CareerEditModal } from "@/features/dashboard/CareerEditModal";
 import { useDashboard } from "@/features/dashboard/DashboardContext";
 import { Chips, RecentSessions, SampleSkillBars, StrengthsAndFocus, TaskCheck, WeekBars } from "@/features/dashboard/parts";
 import { InterviewReportModal } from "@/features/dashboard/InterviewReportModal";
-import { addTask, daysUntil, formatDate, minutesDoneToday, profileCompletion, readinessLabel, recommendNext, taskDone, weakestSkill, weekTotal } from "@/lib/dashboard-data";
+import { addTask, daysUntil, formatDate as formatDashboardDate, minutesDoneToday, profileCompletion, readinessLabel, recommendNext, taskDone, weakestSkill, weekTotal } from "@/lib/dashboard-data";
 import { demoOverallScore, demoProgress } from "@/lib/demo-data";
 import { getProgressAnalytics, type ProgressAnalytics } from "@/services/api";
 import { useTranslation } from "@/features/i18n/LanguageContext";

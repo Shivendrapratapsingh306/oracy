@@ -70,14 +70,27 @@ export function lastNDays(n: number, today: string = todayISO()): string[] {
   return Array.from({ length: n }, (_, i) => addDays(today, i - (n - 1)));
 }
 
-export function daysUntil(iso: string, today: string = todayISO()): number {
-  const a = new Date(`${today}T00:00:00`).getTime();
-  const b = new Date(`${iso}T00:00:00`).getTime();
-  return Math.round((b - a) / 86_400_000);
+export function daysUntil(iso: string, today: string = todayISO()): number | null {
+  if (!iso) return null;
+  try {
+    const a = new Date(`${today}T00:00:00`).getTime();
+    const b = new Date(`${iso}T00:00:00`).getTime();
+    if (isNaN(a) || isNaN(b)) return null;
+    return Math.round((b - a) / 86_400_000);
+  } catch {
+    return null;
+  }
 }
 
 export function formatDate(iso: string): string {
-  return new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+  if (!iso) return "";
+  try {
+    const d = new Date(`${iso}T00:00:00`);
+    if (isNaN(d.getTime())) return String(iso);
+    return d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+  } catch {
+    return String(iso);
+  }
 }
 
 /* ---------- defaults and normalisation ---------- */
@@ -400,7 +413,7 @@ export function buildNotifications(d: DashboardData, today: string): AppNotifica
   }
   if (d.career.deadline) {
     const n = daysUntil(d.career.deadline, today);
-    if (n >= 0 && n <= 30) {
+    if (n !== null && n >= 0 && n <= 30) {
       out.push({ id: `deadline-${d.career.deadline}`, title: n === 0 ? "Your preparation deadline is today" : `${n} day${n === 1 ? "" : "s"} to your preparation deadline`, body: "Review your milestones in Career Launchpad.", href: "/dashboard/career" });
     }
   }

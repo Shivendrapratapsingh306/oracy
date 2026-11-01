@@ -24,7 +24,7 @@ export function PerformancePage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const scorePoints = analytics?.score_trend.map((p) => p.score) ?? [];
+  const scorePoints = (analytics?.score_trend || []).map((p) => p.score);
 
   return (
     <div className="space-y-6">
@@ -94,7 +94,7 @@ export function PerformancePage() {
                 Speaking Sessions
               </span>
               <p className="mt-2 font-display text-3xl text-ink">
-                {analytics.speaking_trends.measured_sessions_count}
+                {analytics.speaking_trends?.measured_sessions_count ?? 0}
               </p>
               <span className="text-xs text-mute">With microphone audio</span>
             </div>

@@ -114,7 +114,7 @@ function SignedInShell({ session, children }: { session: Session; children: Reac
   return (
     <DashboardContext.Provider value={ctx}>
       <div className="min-h-svh bg-paper text-ink">
-        {drawer && <div className="fixed inset-0 z-40 bg-ink/40 lg:hidden" onClick={() => setDrawer(false)} aria-hidden="true" />}
+        {drawer && <div className="fixed inset-0 z-40 bg-ink/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden" onClick={() => setDrawer(false)} aria-hidden="true" />}
 
         <aside
           id="dashboard-sidebar"
@@ -159,21 +159,23 @@ function SignedInShell({ session, children }: { session: Session; children: Reac
         </aside>
 
         <div className="min-w-0 lg:pl-64">
-          <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-line bg-card/85 px-4 backdrop-blur sm:px-6 lg:px-10">
-            <button type="button" onClick={() => setDrawer(true)} aria-label={t("nav.openMenu")} aria-expanded={drawer} aria-controls="dashboard-sidebar" className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink lg:hidden">
+          <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b border-line bg-card/85 px-3 backdrop-blur sm:gap-3 sm:px-6 lg:px-10">
+            <button type="button" onClick={() => setDrawer(true)} aria-label={t("nav.openMenu")} aria-expanded={drawer} aria-controls="dashboard-sidebar" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line text-ink transition hover:border-cobalt active:scale-95 lg:hidden">
               <Icon name="menu" className="h-5 w-5" />
             </button>
             <nav aria-label="Breadcrumb" className="min-w-0 flex-1">
-              <ol className="flex items-center gap-2 truncate text-sm">
+              <ol className="flex items-center gap-1.5 truncate text-sm sm:gap-2">
                 <li className="hidden text-sub sm:block">{t("nav.dashboard")}</li>
                 <li aria-hidden="true" className="hidden text-mute-2 sm:block">/</li>
                 <li aria-current="page" className="truncate font-medium text-ink">{current?.label ?? t("dashboard.sidebar.overview")}</li>
               </ol>
             </nav>
-            <LanguageSelector />
-            <ThemeToggle />
-            <NotificationMenu />
-            <ProfileMenu onSignOut={handleSignOut} />
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+              <LanguageSelector compact />
+              <ThemeToggle />
+              <NotificationMenu />
+              <ProfileMenu onSignOut={handleSignOut} />
+            </div>
           </header>
 
           <main id="main" tabIndex={-1} className="px-4 py-6 sm:px-6 lg:px-10 lg:py-10">

@@ -413,5 +413,10 @@ export async function getInterviewHistory(): Promise<Array<Omit<PersistedIntervi
     headers: authHeaders(),
   });
   if (!response.ok) throw new Error(await readError(response));
-  return response.json();
+  const data = await response.json();
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray((data as { sessions?: unknown }).sessions)) {
+    return (data as { sessions: Array<Omit<PersistedInterviewSession, "questions">> }).sessions;
+  }
+  return [];
 }

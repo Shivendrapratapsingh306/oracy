@@ -32,7 +32,8 @@ export function HistoryPage() {
   }, []);
 
   const filteredSessions = useMemo(() => {
-    return savedSessions.filter((s) => {
+    const list = Array.isArray(savedSessions) ? savedSessions : [];
+    return list.filter((s) => {
       if (statusFilter === "completed") return s.status === "completed";
       if (statusFilter === "in_progress") return s.status !== "completed";
       return true;

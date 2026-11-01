@@ -136,13 +136,15 @@ export function RecentSessions({
     return <p className="py-4 text-xs text-sub">Loading recent sessions…</p>;
   }
 
-  if (sessions.length === 0) {
+  const list = Array.isArray(sessions) ? sessions : [];
+
+  if (list.length === 0) {
     return <NoSessions />;
   }
 
   return (
     <ul className="divide-y divide-line">
-      {sessions.slice(0, limit).map((s) => (
+      {list.slice(0, limit).map((s) => (
         <li key={s.id} className="flex flex-wrap items-center justify-between gap-3 py-3.5">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
